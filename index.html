@@ -29,6 +29,10 @@ button:disabled{opacity:.5}
 .rep{border:1px solid var(--bd);background:var(--card);border-radius:12px;padding:12px}
 .rep .row{margin-top:8px}
 .ck label{display:flex;align-items:center;gap:8px;min-width:110px;font-weight:600}.ck input[type=checkbox]{width:22px;height:22px}
+.top{display:flex;justify-content:space-between;align-items:center}.top button{font-weight:700}
+a.q{display:block;font-size:.85rem;margin:4px 2px 0;color:var(--mut);text-decoration:underline}
+#hv{position:fixed;inset:0;background:var(--bg);z-index:25;overflow:auto;-webkit-overflow-scrolling:touch}#hv .tb{position:sticky;top:0;background:var(--bg);padding:10px 16px;border-bottom:1px solid var(--bd)}#hv .tb button{width:100%;font-weight:700}#hv section{max-width:560px;margin:0 auto;padding:4px 16px 8px}#hv h2{scroll-margin-top:70px;font-size:1.05rem;margin:18px 0 6px;color:var(--ac)}#hv ol{margin:4px 0 4px 20px;padding:0}#hv li{margin:6px 0}#hv .rule{margin:12px 0 4px;padding:12px;border:2px solid var(--ok);border-radius:12px;background:rgba(98,209,154,.08);font-size:1.02rem;line-height:1.5}
+#hv .nt{color:var(--mut);font-size:.88rem}
 .rep .btns{display:flex;gap:8px;margin-top:10px}.rep .btns button{flex:1;font-weight:700;min-height:52px}
 #rsee{border-color:var(--ac);color:var(--ac)}#rword{border-color:var(--ok);color:var(--ok)}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}.acts button{flex:1 1 140px}
@@ -63,14 +67,14 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 </head>
 <body>
 <main>
-<h1>🕵️ Terrain ARP</h1>
+<div class="top"><h1>🕵️ Terrain ARP</h1><button id="hlp" type="button" data-h="h-jour">❓ Mémo</button></div>
 <div class="row"><input id="aff" placeholder="Affaire (ex. DUPONT)" maxlength="60"><button id="newa" type="button">Ouvrir</button></div>
-<select id="old" style="margin-top:8px"></select>
+<div class="row" style="margin-top:8px"><select id="old"></select><button id="dela" type="button" title="Supprimer l'affaire">🗑</button></div>
 
 <h3>1 · Ajouter</h3>
-<button id="imp" class="big" type="button">🎧 Ajouter un enregistrement du téléphone</button><input id="impf" type="file" multiple hidden>
-<button id="ph" class="big" type="button">📷 Ajouter les photos de la galerie</button><input id="phf" type="file" accept="image/*" multiple hidden>
-<button id="gpx" class="big" type="button">🗺 Ajouter la trace GPS (Geo Tracker)</button><input id="gpxf" type="file" multiple hidden>
+<button id="imp" class="big" type="button">🎧 Ajouter un enregistrement du téléphone</button><input id="impf" type="file" multiple hidden><a href="#" class="q" data-h="h-audio">? Où trouver mon enregistrement : Fichiers › ☰ › Récents</a>
+<button id="ph" class="big" type="button">📷 Ajouter les photos de la galerie</button><input id="phf" type="file" accept="image/*" multiple hidden><a href="#" class="q" data-h="h-photo">? Comment ajouter les photos</a>
+<button id="gpx" class="big" type="button">🗺 Ajouter la trace GPS (Geo Tracker)</button><input id="gpxf" type="file" multiple hidden><a href="#" class="q" data-h="h-gps">? Trace Geo Tracker : Fichiers › ☰ › Récents</a>
 <button id="go" class="big" type="button">● Enregistrer ici (écran allumé)</button>
 <div class="lv" id="lv"><i id="lvb"></i></div>
 <p id="st" class="st" role="status"></p>
@@ -82,6 +86,7 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 <div class="row"><select id="rveh" aria-label="Véhicule"></select></div>
 <div class="row ck"><label><input type="checkbox" id="cpea"> Péage</label><input id="peage" inputmode="decimal" placeholder="Montant (€)" hidden></div>
 <div class="row ck"><label><input type="checkbox" id="cpar"> Parking</label><input id="park" inputmode="decimal" placeholder="Montant (€)" hidden></div><p class="mut" id="kmline" style="margin:6px 2px 0"></p>
+<a href="#" class="q" data-h="h-rap">? Comment faire le rapport</a>
 <div class="btns"><button id="rsee" type="button">👁 Voir le rapport</button><button id="rword" type="button">⬇ Word</button></div>
 </div>
 <div class="acts">
@@ -109,6 +114,25 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 <div id="list"></div>
 </main>
 
+<div id="hv" hidden><div class="tb"><button id="hclose" type="button">✕ Fermer le mémo</button></div><section>
+<div class="rule">📌 <b>La règle pour trouver un fichier</b><br>Fichiers (dossier bleu) › menu <b>☰</b> en haut à gauche › <b>Récents</b>.<br>Le fichier que tu viens de faire est <b>tout en haut</b>.</div>
+<h2 id="h-jour">🗓 Une mission, du début à la fin</h2>
+<ol><li><b>Au départ</b> : Geo Tracker › gros bouton rouge ● (trace GPS).</li><li><b>Pendant</b> : Enregistreur vocal › bouton rouge, tu dictes ce que tu vois. Tu prends tes photos normalement. Tu photographies les tickets de péage et de parking.</li><li><b>À la fin</b> : Enregistreur vocal › ■ › Enregistrer. Geo Tracker › bouton › ■ arrêter.</li><li><b>Le soir, dans Terrain ARP</b> : Affaire › Ouvrir, puis 🎧 enregistrement, 📷 photos, 🗺 trace GPS.</li><li>Attendre « Transcription terminée », puis 2 · Rapport › 👁 Voir › ⬇ Word si besoin.</li></ol>
+<h2 id="h-audio">🎧 Ajouter un enregistrement</h2>
+<ol><li>Touche <b>🎧 Ajouter un enregistrement du téléphone</b>.</li><li>Choisis <b>Fichiers</b> (le dossier bleu), jamais l'appareil photo ni l'enregistreur.</li><li>Menu <b>☰</b> en haut à gauche › <b>Récents</b>.</li><li>Touche l'enregistrement tout en haut (son nom commence souvent par « Voice » ou « Enregistrement »). La transcription démarre seule.</li></ol>
+<p class="nt">Garde l'appli ouverte pendant la transcription. La première fois, un module se télécharge (Wi-Fi conseillé).</p>
+<h2 id="h-photo">📷 Ajouter les photos</h2>
+<ol><li>Touche <b>📷 Ajouter les photos de la galerie</b>.</li><li>Choisis <b>Fichiers</b> ou <b>Galerie</b>, puis coche toutes les photos de la mission.</li><li>Touche <b>Sélectionner</b> (ou OK). Chaque photo se range seule à son heure de prise de vue.</li></ol>
+<h2 id="h-gps">🗺 Ajouter la trace GPS</h2>
+<ol><li><b>Dans Geo Tracker</b> : menu ☰ en haut à gauche › Traces › touche la trace de la mission.</li><li>Bouton <b>partager / exporter</b> › choisis <b>GPX</b> › enregistre-le (« Enregistrer » ou « Enregistrer dans Fichiers »).</li><li><b>Dans Terrain ARP</b> : <b>🗺 Ajouter la trace GPS</b> › <b>Fichiers</b> › menu <b>☰</b> › <b>Récents</b> › le fichier <b>.gpx</b> tout en haut.</li></ol>
+<p class="nt">Les noms exacts des boutons de Geo Tracker peuvent varier selon sa version : cherche « Exporter » ou « Partager », puis « GPX ».</p>
+<h2 id="h-rap">📝 Faire le rapport</h2>
+<ol><li>Dans <b>2 · Rapport</b> : choisis le type (vacation, repérage, synthèse) et le jour.</li><li>Choisis la voiture 🚗. Coche <b>Péage</b> et/ou <b>Parking</b> et tape le montant des tickets.</li><li><b>👁 Voir le rapport</b> : tu relis.</li><li><b>⬇ Word</b> : le fichier part dans Téléchargements ou s'ouvre pour être partagé, modifiable.</li><li>Rapport de synthèse : <b>📤 Envoyer à Claude</b>, il le rédige.</li></ol>
+<h2 id="h-veh">🚗 Ajouter une voiture (une seule fois)</h2>
+<ol><li>⚙ Réglages (en bas) › Mes véhicules.</li><li>Nom (ex. Micra), carburant, puis la consommation <b>ou</b> le CO2 de la carte grise (case V.7).</li><li>➕ Ajouter ce véhicule.</li></ol>
+<h2 id="h-maj">🔄 Installer une mise à jour de l'appli</h2>
+<ol><li>Télécharge le nouveau fichier index.html que Claude t'envoie.</li><li>Brave › github.com/RicOrizone/terrain-arp › ··· (à droite du bouton vert Code) › Upload files.</li><li>choose your files › Fichiers › ☰ › <b>Récents</b> › le index.html tout en haut › Sélectionner.</li><li>Attendre que « index.html » s'affiche sous le cadre, puis <b>Commit changes</b>.</li><li>2 à 10 minutes plus tard, rouvrir Terrain ARP.</li></ol>
+</section></div>
 <div id="ov" hidden><div class="tb"><button id="rclose" type="button">✕ Fermer</button><button id="rword2" type="button">⬇ Word</button></div><div id="rv"></div></div>
 
 <script>
@@ -210,7 +234,8 @@ function dlong(d){var s=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeri
 function mmss(s){s=Math.max(0,Math.round(s));var h=Math.floor(s/3600);return(h?h+':':'')+pad(Math.floor(s%3600/60))+':'+pad(s%60)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function key(){return S.cur||'SANS AFFAIRE'}
-function sess(){var k=key();if(!S.affs[k])S.affs[k]=[];return S.affs[k]}
+function sess(){var k=key();if(!S.affs[k]){if(!S.cur)return[];S.affs[k]=[]}return S.affs[k]}
+function sessW(){var k=key();if(!S.affs[k])S.affs[k]=[];return S.affs[k]}
 function safe(k){return k.replace(/[^A-Z0-9_-]+/gi,'_')}
 function byId(id){var r=null;for(var k in S.affs)S.affs[k].forEach(function(s){if(s.id===id)r=s});return r}
 $('mdl').value=S.mdl;$('mdl').addEventListener('change',function(){S.mdl=this.value;save()});
@@ -241,7 +266,7 @@ $('impf').addEventListener('change',function(){
       if(!st){st=new Date((f.lastModified||Date.now())-Math.round(dur*1000));how='d\'après la date du fichier'}
       var id='i'+st.getTime()+'_'+f.size;if(byId(id))return;
       var x={id:id,t0:st.getTime(),d:dstr(st),h:hms(st),dur:Math.round(dur),parts:[{id:id,o:0,dur:dur}],lines:[],src:'imp',how:how,name:f.name};
-      return put(id,f).then(function(){sess().push(x);sess().sort(function(a,b){return a.t0-b.t0});save();render();q.push(x.id);n++});
+      return put(id,f).then(function(){sessW().push(x);sess().sort(function(a,b){return a.t0-b.t0});save();render();q.push(x.id);n++});
     });
   })},Promise.resolve()).then(function(){inp.value='';if(n){msg('Enregistrement ajouté : transcription mot à mot en cours…');runQueue()}});
 });
@@ -276,7 +301,7 @@ function start(){
   if(!navigator.mediaDevices||!window.MediaRecorder){msg('Ce navigateur ne permet pas d\'enregistrer : utilise « Ajouter un enregistrement du téléphone ».');return}
   navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:true,autoGainControl:true}}).then(function(s){
     stream=s;var d=new Date();
-    cur={id:'r'+d.getTime(),t0:d.getTime(),d:dstr(d),h:hms(d),dur:0,parts:[],lines:[],src:'rec',running:true};sess().push(cur);save();
+    cur={id:'r'+d.getTime(),t0:d.getTime(),d:dstr(d),h:hms(d),dur:0,parts:[],lines:[],src:'rec',running:true};sessW().push(cur);save();
     s.getAudioTracks().forEach(function(t){t.onended=function(){if(cur&&cur.running){addLine(cur,new Date(),'⚠ Micro coupé par le téléphone','w');save();render()}}});
     startPart();
     rotT=setInterval(function(){if(mr&&mr.state==='recording')mr.stop()},600000);
@@ -407,7 +432,7 @@ function exifDate(file){
   }).catch(function(){return null});
 }
 function placePhoto(d,pid){
-  var A=sess(),t=d.getTime(),x=null;
+  var A=sessW(),t=d.getTime(),x=null;
   for(var i=0;i<A.length;i++){var s=A[i];if(s.photos)continue;var du=s.dur||((cur&&cur.id===s.id)?(Date.now()-s.t0)/1000:0);if(t>=s.t0-60000&&t<=s.t0+du*1000+60000){x=s;break}}
   if(!x){var ds=dstr(d);x=A.filter(function(s){return s.photos&&s.d===ds})[0];if(!x){x={id:'g'+t,t0:t,d:ds,h:hms(d),lines:[],dur:0,photos:1};A.push(x)}if(t<x.t0){x.lines.forEach(function(l){l.o+=(x.t0-t)/1000});x.t0=t;x.h=hms(d)}}
   addLine(x,d,'📷 Photo','p',{pid:pid});
@@ -461,7 +486,7 @@ $('gpxf').addEventListener('change',function(){
     var g=parseGpx(t);if(!g.n){msg('Trace vide ou illisible : '+f.name);return}
     var st=new Date(g.t0||f.lastModified||Date.now()),en=new Date(g.t1||g.t0||f.lastModified||Date.now()),id='k'+st.getTime()+'_'+g.n;
     if(byId(id))return;
-    var x={id:id,t0:st.getTime(),d:dstr(st),h:hms(st),dur:Math.round((en-st)/1000),lines:[],gps:1,km:g.km,he:hms(en)};sess().push(x);
+    var x={id:id,t0:st.getTime(),d:dstr(st),h:hms(st),dur:Math.round((en-st)/1000),lines:[],gps:1,km:g.km,he:hms(en)};sessW().push(x);
     return fetch('https://geo.api.gouv.fr/communes?lat='+g.p0.la+'&lon='+g.p0.lo+'&fields=nom,codeDepartement&format=json').then(function(r){return r.json()}).then(function(c){if(c&&c[0]){x.dep=c[0].codeDepartement;x.com=c[0].nom}}).catch(function(){});
   })})).then(function(){sess().sort(function(a,b){return a.t0-b.t0});save();render();inp.value='';msg('Trace GPS ajoutée.')});
 });
@@ -527,6 +552,19 @@ function fraisText(d){
   if(par){parts.push(eur(par)+' de parking');tot+=par}
   return parts.join(' + ')+(full&&tot&&parts.length>1?' ; total '+eur(tot):'');
 }
+
+/* ---------- Mémo ---------- */
+function openHelp(id){$('hv').hidden=false;document.body.style.overflow='hidden';var t=$(id);if(t)setTimeout(function(){t.scrollIntoView({block:'start'})},30)}
+document.querySelectorAll('[data-h]').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();openHelp(a.getAttribute('data-h'))})});
+$('hclose').addEventListener('click',function(){$('hv').hidden=true;document.body.style.overflow=''});
+$('dela').addEventListener('click',function(){
+  if(cur){msg('Arrête d\'abord l\'enregistrement.');return}
+  var k=key();if(!S.affs[k]){msg('Aucune affaire ouverte.');return}
+  if(!confirm('Supprimer l\'affaire « '+k+' » et tout son contenu (enregistrements, photos, traces) ?'))return;
+  S.affs[k].forEach(function(x){(x.parts||[]).forEach(function(p){del(p.id)});x.lines.forEach(function(l){if(l.pid)del(l.pid)})});
+  delete S.affs[k];var ks=Object.keys(S.affs);S.cur=ks[0]||'';save();render();msg('Affaire « '+k+' » supprimée.');
+});
+if(!S.seenHelp){S.seenHelp=1;save();setTimeout(function(){openHelp('h-jour')},400)}
 
 /* ---------- Affaires ---------- */
 $('newa').addEventListener('click',function(){var v=$('aff').value.trim().toUpperCase();if(!v){msg('Écris le nom de l\'affaire.');return}if(cur){msg('Arrête d\'abord l\'enregistrement.');return}S.cur=v;sess();save();render();msg('Affaire '+v+' ouverte.')});
