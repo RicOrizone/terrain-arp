@@ -65,7 +65,7 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 <select id="old" style="margin-top:8px"></select>
 
 <h3>1 · Ajouter</h3>
-<button id="imp" class="big" type="button">🎧 Ajouter un enregistrement du téléphone</button><input id="impf" type="file" accept="audio/*,.m4a,.mp3,.aac,.amr,.3gp,.wav,.ogg,.opus,.webm" multiple hidden>
+<button id="imp" class="big" type="button">🎧 Ajouter un enregistrement du téléphone</button><input id="impf" type="file" multiple hidden>
 <button id="ph" class="big" type="button">📷 Ajouter les photos de la galerie</button><input id="phf" type="file" accept="image/*" multiple hidden>
 <button id="go" class="big" type="button">● Enregistrer ici (écran allumé)</button>
 <div class="lv" id="lv"><i id="lvb"></i></div>
@@ -224,7 +224,7 @@ function audioDur(blob){return new Promise(function(ok){var a=document.createEle
 function nameDate(n){var m=n.match(/(20\d{2})[-_.]?(\d{2})[-_.]?(\d{2})[ _T-]?(\d{2})[-_.:h]?(\d{2})[-_.:m]?(\d{2})/);return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5],+m[6]):null}
 $('imp').addEventListener('click',function(){$('impf').click()});
 $('impf').addEventListener('change',function(){
-  var F=[].slice.call(this.files),inp=this,n=0;
+  var F=[].slice.call(this.files).filter(function(f){return /^audio\//.test(f.type)||/\.(m4a|mp3|aac|amr|3gp|wav|ogg|opus|webm|mp4)$/i.test(f.name)}),inp=this,n=0;if(!F.length){msg('Ce fichier n\'est pas un enregistrement audio.');inp.value='';return}
   F.reduce(function(p,f){return p.then(function(){
     return audioDur(f).then(function(dur){
       var st=nameDate(f.name),how='d\'après le nom du fichier';
