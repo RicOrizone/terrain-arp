@@ -19,6 +19,7 @@ button:disabled{opacity:.5}
 .big{display:flex;align-items:center;justify-content:center;width:100%;min-height:64px;font-size:1.08rem;font-weight:700;margin-top:10px;border-width:2px}
 #imp{border-color:var(--ok);color:var(--ok)}
 #ph{border-color:var(--ac);color:var(--ac)}
+#gpx{border-color:#c9a2ff;color:#c9a2ff}
 #go{border-color:var(--rec);color:var(--rec)}
 #go.on{background:var(--rec);color:#fff}
 .lv{height:8px;border-radius:4px;background:var(--card);border:1px solid var(--bd);margin-top:8px;overflow:hidden;display:none}
@@ -27,6 +28,7 @@ button:disabled{opacity:.5}
 .bar{height:6px;border-radius:3px;background:var(--card);overflow:hidden;margin-top:6px;display:none}.bar.on{display:block}.bar i{display:block;height:100%;width:0;background:var(--ok)}
 .rep{border:1px solid var(--bd);background:var(--card);border-radius:12px;padding:12px}
 .rep .row{margin-top:8px}
+.ck label{display:flex;align-items:center;gap:8px;min-width:110px;font-weight:600}.ck input[type=checkbox]{width:22px;height:22px}
 .rep .btns{display:flex;gap:8px;margin-top:10px}.rep .btns button{flex:1;font-weight:700;min-height:52px}
 #rsee{border-color:var(--ac);color:var(--ac)}#rword{border-color:var(--ok);color:var(--ok)}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 6px}.acts button{flex:1 1 140px}
@@ -46,6 +48,7 @@ details.oth{margin-top:6px}details.oth summary{color:var(--mut);font-size:.88rem
 .sd .tr{border-color:var(--ok);color:var(--ok)}
 a{color:var(--ac)}
 details.cfg{margin-top:18px;border:1px solid var(--bd);border-radius:12px;padding:8px 12px}details.cfg summary{font-weight:700;cursor:pointer}
+.vf{display:flex;flex-direction:column;gap:6px;margin-top:6px}.vrow{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--bd);padding:6px 0}.vrow button{padding:4px 8px;font-size:.8rem}
 details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 #ov{position:fixed;inset:0;background:#2a2f36;z-index:20;overflow:auto;-webkit-overflow-scrolling:touch}
 #ov .tb{position:sticky;top:0;display:flex;gap:8px;padding:10px 12px;background:#1b2027;border-bottom:1px solid #000}
@@ -67,6 +70,7 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 <h3>1 · Ajouter</h3>
 <button id="imp" class="big" type="button">🎧 Ajouter un enregistrement du téléphone</button><input id="impf" type="file" multiple hidden>
 <button id="ph" class="big" type="button">📷 Ajouter les photos de la galerie</button><input id="phf" type="file" accept="image/*" multiple hidden>
+<button id="gpx" class="big" type="button">🗺 Ajouter la trace GPS (Geo Tracker)</button><input id="gpxf" type="file" multiple hidden>
 <button id="go" class="big" type="button">● Enregistrer ici (écran allumé)</button>
 <div class="lv" id="lv"><i id="lvb"></i></div>
 <p id="st" class="st" role="status"></p>
@@ -75,7 +79,9 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 <h3>2 · Rapport</h3>
 <div class="rep">
 <div class="row"><select id="rtype"><option value="vac">Rapport de vacation</option><option value="rep">Rapport de repérage</option><option value="syn">Rapport de synthèse</option></select><select id="rday" aria-label="Jour"></select></div>
-<div class="row"><input id="frais" placeholder="Frais (ex. 50 km + 8 € de péages)"></div>
+<div class="row"><select id="rveh" aria-label="Véhicule"></select></div>
+<div class="row ck"><label><input type="checkbox" id="cpea"> Péage</label><input id="peage" inputmode="decimal" placeholder="Montant (€)" hidden></div>
+<div class="row ck"><label><input type="checkbox" id="cpar"> Parking</label><input id="park" inputmode="decimal" placeholder="Montant (€)" hidden></div><p class="mut" id="kmline" style="margin:6px 2px 0"></p>
 <div class="btns"><button id="rsee" type="button">👁 Voir le rapport</button><button id="rword" type="button">⬇ Word</button></div>
 </div>
 <div class="acts">
@@ -85,6 +91,10 @@ details.cfg label{display:block;margin:10px 0 4px;font-size:.9rem}
 
 <details class="cfg"><summary>⚙ Réglages</summary>
 <label for="agent">Ton nom (en-tête du rapport)</label><input id="agent" placeholder="Nom de l'agent">
+<label>Mes véhicules</label><div id="vlist"></div>
+<div class="vf"><input id="vnom" placeholder="Nom (ex. Micra)"><select id="vfuel"><option value="sp95">Essence SP95</option><option value="e10">Essence SP95-E10</option><option value="sp98">Essence SP98</option><option value="gazole">Diesel (gazole)</option><option value="e85">Superéthanol E85</option><option value="gplc">GPL</option><option value="elec">Électrique</option></select><input id="vconso" inputmode="decimal" placeholder="Consommation (L/100 km)"><input id="vco2" inputmode="numeric" placeholder="ou CO2 de la carte grise, case V.7 (g/km)"><input id="vkwh" inputmode="decimal" placeholder="Prix du kWh (€), électrique seulement" hidden><button id="vadd" type="button">➕ Ajouter ce véhicule</button></div>
+<label for="dep">Département par défaut pour le prix à la pompe</label><input id="dep" inputmode="numeric" maxlength="3" placeholder="ex. 34">
+<p class="mut">Utilisé seulement si la trace GPS ne permet pas de trouver le département (il est trouvé tout seul à partir du point de départ de la trace).</p>
 <label>Ta voix : pour écarter les autres voix (formateur, télé, passants)</label>
 <button id="venr" type="button">🎙 Enregistrer ma voix (30 s)</button>
 <p class="mut" id="vst"></p>
@@ -433,6 +443,91 @@ $('venr').addEventListener('click',function(){
 });
 voiceUI();
 
+/* ---------- Trace GPS (fichier GPX de Geo Tracker) ---------- */
+function hav(a,b){var R=6371000,r=Math.PI/180,dl=(b.la-a.la)*r,dn=(b.lo-a.lo)*r,x=Math.sin(dl/2)*Math.sin(dl/2)+Math.cos(a.la*r)*Math.cos(b.la*r)*Math.sin(dn/2)*Math.sin(dn/2);return 2*R*Math.asin(Math.sqrt(x))}
+function parseGpx(txt){
+  var doc=new DOMParser().parseFromString(txt,'application/xml'),P=[].slice.call(doc.getElementsByTagName('trkpt'));
+  if(!P.length)P=[].slice.call(doc.getElementsByTagName('rtept'));
+  var pts=P.map(function(p){var t=p.getElementsByTagName('time')[0];return{la:+p.getAttribute('lat'),lo:+p.getAttribute('lon'),t:t?Date.parse(t.textContent):NaN}}).filter(function(p){return isFinite(p.la)&&isFinite(p.lo)});
+  var m=0,last=null;pts.forEach(function(p){if(!last){last=p;return}var dd=hav(last,p);if(dd>=5){m+=dd;last=p}});
+  var tt=pts.map(function(p){return p.t}).filter(isFinite);
+  return{p0:pts[0],km:Math.round(m/100)/10,n:pts.length,t0:tt.length?Math.min.apply(null,tt):null,t1:tt.length?Math.max.apply(null,tt):null};
+}
+$('gpx').addEventListener('click',function(){$('gpxf').click()});
+$('gpxf').addEventListener('change',function(){
+  var F=[].slice.call(this.files).filter(function(f){return/\.gpx$/i.test(f.name)||/gpx/.test(f.type)}),inp=this;
+  if(!F.length){msg('Ce n\'est pas un fichier GPX : dans Geo Tracker, exporte la trace en « GPX ».');inp.value='';return}
+  Promise.all(F.map(function(f){return f.text().then(function(t){
+    var g=parseGpx(t);if(!g.n){msg('Trace vide ou illisible : '+f.name);return}
+    var st=new Date(g.t0||f.lastModified||Date.now()),en=new Date(g.t1||g.t0||f.lastModified||Date.now()),id='k'+st.getTime()+'_'+g.n;
+    if(byId(id))return;
+    var x={id:id,t0:st.getTime(),d:dstr(st),h:hms(st),dur:Math.round((en-st)/1000),lines:[],gps:1,km:g.km,he:hms(en)};sess().push(x);
+    return fetch('https://geo.api.gouv.fr/communes?lat='+g.p0.la+'&lon='+g.p0.lo+'&fields=nom,codeDepartement&format=json').then(function(r){return r.json()}).then(function(c){if(c&&c[0]){x.dep=c[0].codeDepartement;x.com=c[0].nom}}).catch(function(){});
+  })})).then(function(){sess().sort(function(a,b){return a.t0-b.t0});save();render();inp.value='';msg('Trace GPS ajoutée.')});
+});
+function num(v){v=String(v||'').replace(',','.').replace(/[^\d.]/g,'');return v?+v:0}
+function eur(n){return n.toFixed(2).replace('.',',')+' €'}
+function kmDay(d){var k=0;sess().forEach(function(x){if(x.gps&&x.d===d)k+=x.km||0});return Math.round(k*10)/10}
+if(S.dep==null){S.dep='34';save()}$('dep').value=S.dep;$('dep').addEventListener('change',function(){S.dep=this.value.trim();save()});
+function fk(d){return'fr_'+key()+'_'+d}
+function fr(d){return S[fk(d)]||{p:0,pv:'',k:0,kv:''}}
+function frUI(){var d=$('rday').value,f=fr(d);$('cpea').checked=!!f.p;$('peage').hidden=!f.p;$('peage').value=f.pv||'';$('cpar').checked=!!f.k;$('park').hidden=!f.k;$('park').value=f.kv||''}
+function frSave(){var d=$('rday').value;if(!d)return;S[fk(d)]={p:$('cpea').checked?1:0,pv:$('peage').value,k:$('cpar').checked?1:0,kv:$('park').value};save();frUI()}
+['cpea','cpar'].forEach(function(i){$(i).addEventListener('change',function(){frSave();if(this.checked)$(i==='cpea'?'peage':'park').focus()})});
+['peage','park'].forEach(function(i){$(i).addEventListener('input',function(){var d=$('rday').value;if(!d)return;var f=fr(d);if(i==='peage')f.pv=this.value;else f.kv=this.value;S[fk(d)]=f;save()})});
+function kmLine(){var d=$('rday').value;if(!d){$('kmline').textContent='';return}var k=kmDay(d);$('kmline').textContent=k?('Trajet du jour (trace GPS) : '+String(k).replace('.',',')+' km'):'Pas de trace GPS pour ce jour : les km ne seront pas comptés.'}
+var FUELN={sp95:'SP95',e10:'SP95-E10',sp98:'SP98',gazole:'gazole',e85:'E85',gplc:'GPL',elec:'électrique'};
+S.vehs=S.vehs||[];
+var CO2F={sp95:23.7,e10:23.1,sp98:23.7,gazole:26.4,e85:16.5,gplc:16.6};
+function vk(d){return'veh_'+key()+'_'+d}
+function vehById(id){return S.vehs.filter(function(v){return v.id===id})[0]}
+function veh(d){var v=vehById(S[vk(d)])||vehById(S.lastVeh)||S.vehs[0];return v||{f:'sp95',c:'',kwh:'',nom:''}}
+function vehUI(){
+  var d=$('rday').value,cur=veh(d),sel=$('rveh');
+  sel.innerHTML=S.vehs.length?S.vehs.map(function(v){return'<option value="'+v.id+'">🚗 '+esc(v.nom)+' · '+FUELN[v.f]+(v.c?' · '+String(v.c).replace('.',',')+(v.f==='elec'?' kWh':' L')+'/100':'')+'</option>'}).join(''):'<option value="">🚗 Ajoute ton véhicule dans ⚙ Réglages</option>';
+  if(cur.id)sel.value=cur.id;
+  $('vlist').innerHTML=S.vehs.map(function(v){return'<div class="vrow"><span>'+esc(v.nom)+' · '+FUELN[v.f]+' · '+String(v.c).replace('.',',')+(v.f==='elec'?' kWh':' L')+'/100 km'+(v.co2?' (d\'après CO2 '+v.co2+' g/km)':'')+'</span><button type="button" data-del="'+v.id+'">Supprimer</button></div>'}).join('')||'<p class="mut">Aucun véhicule.</p>';
+  $('vlist').querySelectorAll('[data-del]').forEach(function(b){b.addEventListener('click',function(){if(!confirm('Supprimer ce véhicule ?'))return;S.vehs=S.vehs.filter(function(v){return v.id!==b.getAttribute('data-del')});save();vehUI()})});
+}
+$('rveh').addEventListener('change',function(){var d=$('rday').value;if(!d||!this.value)return;S[vk(d)]=this.value;S.lastVeh=this.value;save()});
+$('vfuel').addEventListener('change',function(){var e=this.value==='elec';$('vkwh').hidden=!e;$('vco2').hidden=e;$('vconso').placeholder=e?'Consommation (kWh/100 km)':'Consommation (L/100 km)'});
+$('vadd').addEventListener('click',function(){
+  var nom=$('vnom').value.trim(),f=$('vfuel').value,c=num($('vconso').value),co2=num($('vco2').value);
+  if(!nom){msg('Donne un nom au véhicule.');return}
+  if(!c&&co2&&CO2F[f]){c=Math.round(co2/CO2F[f]*10)/10}
+  if(!c){msg('Indique la consommation, ou le CO2 de la carte grise (case V.7).');return}
+  var v={id:'v'+Date.now(),nom:nom,f:f,c:c,co2:(!num($('vconso').value)&&co2)?co2:null,kwh:f==='elec'?$('vkwh').value.trim():''};
+  S.vehs.push(v);S.lastVeh=v.id;save();['vnom','vconso','vco2','vkwh'].forEach(function(i){$(i).value=''});vehUI();msg('Véhicule « '+nom+' » ajouté.');
+});
+function depDay(d){var r=null;sess().forEach(function(x){if(x.gps&&x.d===d&&x.dep&&!r)r=x.dep});return r||S.dep||''}
+var API='https://data.economie.gouv.fr/api/explore/v2.1/catalog/datasets/prix-des-carburants-en-france-flux-instantane-v2/records';
+function ensureFuel(d){
+  S.prices=S.prices||{};var f=veh(d).f,dep=depDay(d),k=d+'_'+f+'_'+(dep||'FR');
+  if(f==='elec'||S.prices[k]||!kmDay(d))return Promise.resolve();
+  return fetch(API+'?limit=1').then(function(r){return r.json()}).then(function(j){
+    var keys=Object.keys((j.results||[])[0]||{});
+    var fk=keys.filter(function(x){return/prix/i.test(x)&&new RegExp(f,'i').test(x)&&!/maj|date|rupture/i.test(x)&&(f!=='sp95'||!/e10/i.test(x))})[0];
+    var dk=keys.filter(function(x){return/dep.*code|code.*dep/i.test(x)})[0];
+    if(!fk)throw'prix '+FUELN[f]+' introuvable';
+    var q=function(w){return fetch(API+'?select='+encodeURIComponent('avg('+fk+') as p')+(w?'&where='+encodeURIComponent(w):'')).then(function(r){return r.json()}).then(function(x){return x.results&&x.results[0]?x.results[0].p:null})};
+    return(dep&&dk?q(dk+'="'+dep+'"'):Promise.resolve(null)).then(function(p){if(p!=null)return{p:p,z:'dép. '+dep};return q('').then(function(p2){return{p:p2,z:'moyenne France'}})});
+  }).then(function(r){
+    if(!r||r.p==null)throw'aucun prix';var p=+r.p;if(p>10)p=p/1000;
+    S.prices[k]={p:Math.round(p*1000)/1000,z:r.z,at:dstr(new Date())};save();
+  }).catch(function(e){msg('Prix à la pompe indisponible ('+e+') : connexion nécessaire. Les frais affichent seulement les km.')});
+}
+function fraisText(d){
+  var k=kmDay(d),v=veh(d),c=num(v.c),f=v.f,F=fr(d),pea=F.p?num(F.pv):0,par=F.k?num(F.kv):0,dep=depDay(d);
+  var P=f==='elec'?(num(v.kwh)?{p:num(v.kwh),z:'prix saisi',at:''}:null):(S.prices||{})[d+'_'+f+'_'+(dep||'FR')];
+  if(!k&&!pea&&!par)return'—';
+  var parts=[],tot=0,full=true,u=f==='elec'?'kWh':'L';
+  if(k){if(c&&P){var ce=k*c/100*P.p;parts.push(String(k).replace('.',',')+' km × '+String(c).replace('.',',')+' '+u+'/100 km × '+P.p.toFixed(3).replace('.',',')+' €/'+u+' ('+FUELN[f]+', '+P.z+(P.at?', '+P.at:'')+') = '+eur(ce)+(f==='elec'?' d\'électricité':' de carburant'));tot+=ce}
+         else{parts.push(String(k).replace('.',',')+' km'+(c?(f==='elec'?' (prix du kWh non saisi)':' (prix à la pompe indisponible)'):' (consommation non saisie)'));full=false}}
+  if(pea){parts.push(eur(pea)+' de péage');tot+=pea}
+  if(par){parts.push(eur(par)+' de parking');tot+=par}
+  return parts.join(' + ')+(full&&tot&&parts.length>1?' ; total '+eur(tot):'');
+}
+
 /* ---------- Affaires ---------- */
 $('newa').addEventListener('click',function(){var v=$('aff').value.trim().toUpperCase();if(!v){msg('Écris le nom de l\'affaire.');return}if(cur){msg('Arrête d\'abord l\'enregistrement.');return}S.cur=v;sess();save();render();msg('Affaire '+v+' ouverte.')});
 $('old').addEventListener('change',function(){if(this.value&&!cur){S.cur=this.value;save();render()}});
@@ -441,7 +536,7 @@ $('old').addEventListener('change',function(){if(this.value&&!cur){S.cur=this.va
 function days(){var m={};sess().forEach(function(x){m[x.d]=1});return Object.keys(m).sort(function(a,b){return a.split('/').reverse().join('')<b.split('/').reverse().join('')?1:-1})}
 function reportData(){
   var d=$('rday').value,type=$('rtype').value,items=[];
-  sess().filter(function(x){return x.d===d}).forEach(function(x){
+  sess().filter(function(x){return x.d===d&&!x.gps}).forEach(function(x){
     var isRec=!x.photos;
     if(isRec)items.push({t:x.t0,first:1});
     x.lines.forEach(function(l){items.push({t:x.t0+l.o*1000,l:l})});
@@ -460,7 +555,7 @@ function reportData(){
   var tot=firstT!=null?Math.round((lastT-firstT)/60000):0;
   var title=type==='vac'?'RAPPORT DE VACATION':type==='rep'?'RAPPORT DE REPÉRAGE':'RAPPORT DE SYNTHÈSE';
   var day=d?d.split('/'):null,dd=day?new Date(+day[2],+day[1]-1,+day[0]):new Date();
-  return{type:type,title:title,meta:[['Affaire',key()],['Agent',S.agent||'—'],['Date',dlong(dd)],['Total des heures',pad(Math.floor(tot/60))+'h'+pad(tot%60)],['Total des frais',$('frais').value.trim()||'—']],lines:out,date:d};
+  return{type:type,title:title,meta:[['Affaire',key()],['Agent',S.agent||'—'],['Date',dlong(dd)],['Total des heures',pad(Math.floor(tot/60))+'h'+pad(tot%60)],['Kilomètres',kmDay(d)?String(kmDay(d)).replace('.',',')+' km (trace GPS)':'—'],['Total des frais',fraisText(d)]],lines:out,date:d};
 }
 function viewReport(){
   if(!$('rday').value){msg('Rien à mettre dans un rapport pour cette affaire.');return}
@@ -470,7 +565,8 @@ function viewReport(){
   $('rv').innerHTML=h;$('ov').hidden=false;document.body.style.overflow='hidden';
   $('rv').querySelectorAll('img[data-pid]').forEach(function(im){get(im.getAttribute('data-pid')).then(function(b){if(b)im.src=URL.createObjectURL(b)})});
 }
-$('rsee').addEventListener('click',viewReport);
+$('rsee').addEventListener('click',function(){var d=$('rday').value;if(d)msg('Préparation du rapport…');ensureFuel(d).then(viewReport)});
+$('rday').addEventListener('change',function(){frUI();kmLine();vehUI()});
 $('rclose').addEventListener('click',function(){$('ov').hidden=true;document.body.style.overflow=''});
 function shrink(blob){
   return createImageBitmap(blob).then(function(bm){
@@ -493,7 +589,7 @@ function wordReport(){
     msg('Word prêt : '+name);
   }).catch(function(e){msg('Word impossible : '+e)});
 }
-$('rword').addEventListener('click',wordReport);$('rword2').addEventListener('click',wordReport);
+var wr=function(){ensureFuel($('rday').value).then(wordReport)};$('rword').addEventListener('click',wr);$('rword2').addEventListener('click',wr);
 
 /* ---------- Affichage ---------- */
 function partAt(x,o){var P=x.parts||[],r=P[0];for(var i=0;i<P.length;i++)if(P[i].o<=o)r=P[i];return r}
@@ -501,10 +597,11 @@ function render(){
   var ks=Object.keys(S.affs);
   $('old').innerHTML='<option value="">Affaires enregistrées ('+ks.length+')</option>'+ks.map(function(k){return'<option'+(k===key()?' selected':'')+'>'+esc(k)+'</option>'}).join('');
   $('aff').value=S.cur;
-  var D=days(),rd=$('rday'),pv=rd.value;rd.innerHTML=D.map(function(d){return'<option>'+d+'</option>'}).join('');if(D.indexOf(pv)>=0)rd.value=pv;
+  var D=days(),rd=$('rday'),pv=rd.value;rd.innerHTML=D.map(function(d){return'<option>'+d+'</option>'}).join('');if(D.indexOf(pv)>=0)rd.value=pv;frUI();kmLine();vehUI();
   var L=sess().slice().reverse(),box=$('list');
   if(!L.length){box.innerHTML='<p class="mut">Rien pour cette affaire.</p>';return}
   box.innerHTML=L.map(function(x){
+    if(x.gps)return'<div class="ses" data-id="'+x.id+'"><h2>🗺 Trace GPS · '+esc(x.d)+' · '+esc(x.h)+' → '+esc(x.he||'')+'</h2><p>'+String(x.km).replace('.',',')+' km parcourus'+(x.com?' · départ : '+esc(x.com)+' ('+esc(x.dep)+')':'')+'</p><div class="sd"><button class="dl" type="button">Supprimer</button></div></div>';
     var live=cur&&cur.id===x.id,title=x.photos?'📷 Photos':(x.src==='imp'?'🎧 Enregistrement importé':'🎙 Enregistrement');
     return'<div class="ses" data-id="'+x.id+'"><h2>'+title+' · '+esc(x.d)+' · '+esc(x.h)+(x.dur?' · '+mmss(x.dur):'')+(live?' · en cours':'')+'</h2>'+
     (x.src==='imp'?'<p class="mut">Heure de début '+esc(x.how)+'. <a href="#" class="fix">Corriger l\'heure</a></p>':'')+
@@ -515,6 +612,7 @@ function render(){
   }).join('');
   box.querySelectorAll('.ses').forEach(function(el){
     var id=el.getAttribute('data-id'),x=byId(id),au=el.querySelector('audio'),curP=null;
+    if(x&&x.gps){var bg=el.querySelector('.dl');if(bg)bg.addEventListener('click',function(){if(!confirm('Supprimer ?'))return;var A=sess();A.splice(A.indexOf(x),1);save();render()});return}
     function load(p){if(!au||!p||curP===p.id)return Promise.resolve();curP=p.id;return get(p.id).then(function(b){if(b)au.src=URL.createObjectURL(b)})}
     if(au&&!(cur&&cur.id===id))load((x.parts||[])[0]);
     el.querySelectorAll('.l').forEach(function(li){li.addEventListener('click',function(){
@@ -533,6 +631,7 @@ function render(){
 /* ---------- Envoi ---------- */
 function journal(){
   var k=key();return'Journal · '+k+' · agent : '+(S.agent||'—')+'\nDemande : '+$('rtype').options[$('rtype').selectedIndex].text+' du '+($('rday').value||'—')+'\n'+sess().map(function(x){
+    if(x.gps)return'\nTrace GPS du '+x.d+' de '+x.h+' à '+(x.he||'')+' : '+x.km+' km';
     return'\n'+(x.photos?'Photos':'Enregistrement')+' du '+x.d+' à '+x.h+(x.dur?' (durée '+mmss(x.dur)+')':'')+'\n'+x.lines.filter(function(l){return l.s!=='o'}).map(function(l){return l.h+' : '+(l.pid?'📷 Photo ('+safe(k)+'_'+l.pid+'.jpg)':(l.t||'(prise de parole, voir audio)'))}).join('\n');
   }).join('\n');
 }
